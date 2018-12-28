@@ -101,7 +101,9 @@
   );
   console.log(imageDownloader.images);
   var myStrText=JSON.stringify(imageDownloader.images);
-  saveText("downloaded_urls.txt", myStrText);
+  var d = Date()
+  const date_str = d.toLocaleString();
+  saveText(date_str + ".txt", myStrText);
 
   function saveText(filename, text) {
     var tempElem = document.createElement('a');
