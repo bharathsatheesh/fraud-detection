@@ -4,7 +4,7 @@
 
   const imageDownloader = {
     // Source: https://support.google.com/webmasters/answer/2598805?hl=en
-    imageRegex: /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:bmp|gif|jpe?g|png|svg|webp))(?:\?([^#]*))?(?:#(.*))?/i,
+    imageRegex: /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:bmp|gif|jpeg|png|svg|webp))(?:\?([^#]*))?(?:#(.*))?/i,
 
     extractImagesFromTags() {
       return [].slice.apply(document.querySelectorAll('img, a, [style]')).map(imageDownloader.extractImageFromElement);
@@ -99,9 +99,19 @@
       imageDownloader.extractImagesFromStyles()
     ).map(imageDownloader.relativeUrlToAbsolute)
   );
+  console.log(imageDownloader.images);
+  var myStrText=JSON.stringify(imageDownloader.images);
+  saveText("downloaded_urls.txt", myStrText);
+
+  function saveText(filename, text) {
+    var tempElem = document.createElement('a');
+    tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    tempElem.setAttribute('download', filename);
+    tempElem.click();
+  }
 
   chrome.runtime.sendMessage({
-    linkedImages: imageDownloader.linkedImages,
+    // linkedImages: imageDownloader.linkedImages
     images: imageDownloader.images
   });
 

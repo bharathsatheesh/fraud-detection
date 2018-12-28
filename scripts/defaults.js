@@ -43,7 +43,7 @@
     // Images
     show_image_url: true,
     show_open_image_button: true,
-    show_download_image_button: true,
+    show_download_image_button: false,
     columns: 2,
     image_min_width: 50,
     image_max_width: 200,
