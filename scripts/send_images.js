@@ -103,9 +103,14 @@
   var myStrText=JSON.stringify(imageDownloader.images);
   var json_array = []
   for (var i in imageDownloader.images){
-    var str_array = myStrText[i].split("/");
+    var str_array = imageDownloader.images[i].split("/");
     json_array.push({
-      "url": imageDownloader.images[i]
+      "url": imageDownloader.images[i],
+      "year": str_array[4],
+      "month": str_array[5],
+      "day": str_array[6],
+      "section": str_array[7],
+      "caption": str_array[8]
     });
   }
   var json_string = JSON.stringify(json_array)
