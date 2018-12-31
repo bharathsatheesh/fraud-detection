@@ -101,9 +101,17 @@
   );
   console.log(imageDownloader.images);
   var myStrText=JSON.stringify(imageDownloader.images);
+  var json_array = []
+  for (var i in imageDownloader.images){
+    var str_array = myStrText[i].split("/");
+    json_array.push({
+      "url": i
+    });
+  }
+  var json_string = JSON.stringify(json_array)
   var d = Date()
   const date_str = d.toLocaleString();
-  saveText(date_str + ".txt", myStrText);
+  saveText(date_str + ".txt", json_string);
 
   function saveText(filename, text) {
     var tempElem = document.createElement('a');
