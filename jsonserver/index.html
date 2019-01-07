@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>JavaScript - read JSON from URL</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+<div class="mypanel"></div>
+
+<script>
+    $.getJSON('http://localhost:3000/images', function(data) {
+
+        var text = `url: ${data.url}<br>
+                    metadata: ${data.metadata}<br>
+                    caption: ${data.caption}`
+        var image = `<img src=${data.url}>`
+
+        $(".mypanel").html(image);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "images": [
+  {
+    "url": "http://buildboard-10044.cornelltech.io/fall-2018/team_assets/pc083-the-new-york-times/images/Squad.jpg",
+    "metadata": "test_data",
+    "caption": "Team NYTimes"
+  },
+  {
+    "url": "http://buildboard-10044.cornelltech.io/fall-2018/static/cornell-tech-logo.svg",
+    "metadata": "test_data",
+    "caption": "CT Logo"
+  }
+    ]
+}
