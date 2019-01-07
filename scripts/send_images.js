@@ -100,24 +100,23 @@
     ).map(imageDownloader.relativeUrlToAbsolute)
   );
   console.log(imageDownloader.images);
-
-  var purl;
-  var url_json_array = [];
-  for (purl in imageDownloader.images){
-    var res = purl.split("/");
-    url_json_array.push({
-      "image_url": purl,
-      "year": res[2],
-      "month": res[3],
-      "day": res[4],
-      "section": res[5],
-      "caption": res[6]
+  var myStrText=JSON.stringify(imageDownloader.images);
+  var json_array = []
+  for (var i in imageDownloader.images){
+    var str_array = imageDownloader.images[i].split("/");
+    json_array.push({
+      "url": imageDownloader.images[i],
+      "year": str_array[4],
+      "month": str_array[5],
+      "day": str_array[6],
+      "section": str_array[7],
+      "caption": str_array[8]
     });
   }
-  var myStrText=JSON.stringify(imageDownloader.images);
-  var d = Date();
+  var json_string = JSON.stringify(json_array)
+  var d = Date()
   const date_str = d.toLocaleString();
-  saveText(date_str + ".txt", myStrText);
+  saveText(date_str + ".txt", json_string);
 
   function saveText(filename, text) {
     var tempElem = document.createElement('a');
