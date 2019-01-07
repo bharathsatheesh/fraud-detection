@@ -100,8 +100,8 @@
     ).map(imageDownloader.relativeUrlToAbsolute)
   );
   console.log(imageDownloader.images);
-  var myStrText=JSON.stringify(imageDownloader.images);
-  var json_array = []
+  // var myStrText=JSON.stringify(imageDownloader.images);
+  var json_array = [];
   for (var i in imageDownloader.images){
     var str_array = imageDownloader.images[i].split("/");
     json_array.push({
