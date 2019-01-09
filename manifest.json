@@ -1,5 +1,5 @@
 {
-  "name": "Image Downloader",
+  "name": "Verify",
   "description": "Find similar images to identify duplicate/ fake images.",
   "version": "2.4.2",
   "minimum_chrome_version": "31",
