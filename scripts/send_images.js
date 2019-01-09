@@ -113,10 +113,10 @@
       "caption": str_array[8]
     });
   }
-  var json_string = JSON.stringify(json_array)
-  var d = Date()
+  var json_string = JSON.stringify(json_array);
+  var d = Date();
   const date_str = d.toLocaleString();
-  saveText(date_str + ".txt", json_string);
+  // saveText(date_str + ".txt", json_string);
 
   function saveText(filename, text) {
     var tempElem = document.createElement('a');

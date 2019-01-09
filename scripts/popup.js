@@ -354,7 +354,7 @@
           }
 
           if (show_download_image_button) {
-            tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Download">&nbsp;</td>');
+            tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Save Image URL">&nbsp;</td>');
           }
         }
         images_table.append(tools_row);
@@ -390,8 +390,18 @@
       ls.image_count = checkedImages.length;
       ls.image_number = 1;
       checkedImages.forEach(function(checkedImage) {
-        chrome.downloads.download({ url: checkedImage });
+        var json_string = JSON.stringify([checkedImage]);
+        var d = Date();
+        const date_str = d.toLocaleString();
+        saveText(date_str + ".txt", json_string);
+        // chrome.downloads.download({ url: checkedImage });
       });
+      function saveText(filename, text) {
+        var tempElem = document.createElement('a');
+        tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        tempElem.setAttribute('download', filename);
+        tempElem.click();
+      }
 
       flashDownloadingNotification(ls.image_count);
     }
