@@ -393,10 +393,8 @@
         var json_string = JSON.stringify([checkedImage]);
         var d = Date();
         const date_str = d.toLocaleString();
-        chrome.windows.getCurrent(function (currentWindow) {
-          chrome.tabs.query({ active: true, windowId: currentWindow.id }, function (activeTabs) {
-            chrome.tabs.executeScript(activeTabs[0].id, { file: '/scripts/similar_images.js', allFrames: true });
-          });
+        chrome.browserAction.onClicked.addListener(function () {
+          chrome.tabs.create({ url: chrome.runtime.getURL("/views/similar_images.html") });
         });
         // saveText(date_str + ".txt", json_string);
         // chrome.downloads.download({ url: checkedImage });

@@ -12,6 +12,9 @@
     "default_icon": "/icon_129.png",
     "default_popup": "/views/popup.html"
   },
+  "browser_action": {
+    "title": "Your Browser Action Name"
+  },
   "icons": {
     "16": "/icon_16.png",
     "48": "/icon_48.png",
@@ -22,7 +25,8 @@
     "/images/download.png"
   ],
   "background": {
-    "scripts": ["/scripts/defaults.js"]
+    "scripts": ["/scripts/defaults.js", "/scripts/similar_images.js"],
+    "persistent": false
   },
   "options_page": "/views/options.html"
 }
