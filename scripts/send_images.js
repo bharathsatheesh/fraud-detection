@@ -4,7 +4,7 @@
 
   const imageDownloader = {
     // Source: https://support.google.com/webmasters/answer/2598805?hl=en
-    imageRegex: /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:bmp|gif|jpeg|png|svg|webp))(?:\?([^#]*))?(?:#(.*))?/i,
+    imageRegex: /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:bmp|gif|jpe?g|png|svg|webp))(?:\?([^#]*))?(?:#(.*))?/i,
 
     extractImagesFromTags() {
       return [].slice.apply(document.querySelectorAll('img, a, [style]')).map(imageDownloader.extractImageFromElement);
@@ -99,34 +99,9 @@
       imageDownloader.extractImagesFromStyles()
     ).map(imageDownloader.relativeUrlToAbsolute)
   );
-  console.log(imageDownloader.images);
-  var myStrText=JSON.stringify(imageDownloader.images);
-  var json_array = []
-  for (var i in imageDownloader.images){
-    var str_array = imageDownloader.images[i].split("/");
-    json_array.push({
-      "url": imageDownloader.images[i],
-      "year": str_array[4],
-      "month": str_array[5],
-      "day": str_array[6],
-      "section": str_array[7],
-      "caption": str_array[8]
-    });
-  }
-  var json_string = JSON.stringify(json_array)
-  var d = Date()
-  const date_str = d.toLocaleString();
-  saveText(date_str + ".txt", json_string);
-
-  function saveText(filename, text) {
-    var tempElem = document.createElement('a');
-    tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    tempElem.setAttribute('download', filename);
-    tempElem.click();
-  }
 
   chrome.runtime.sendMessage({
-    // linkedImages: imageDownloader.linkedImages
+    linkedImages: imageDownloader.linkedImages,
     images: imageDownloader.images
   });
 

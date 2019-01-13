@@ -146,8 +146,33 @@
         chrome.downloads.download({ url: $(this).data('url') });
       })
       .on('click', '.open_image_button', function () {
-        chrome.tabs.create({ url: $(this).data('url'), active: false });
-      });
+        //chrome.tabs.create({ url: $(this).data('url'), active: false });
+        //chrome.tabs.create({ url: "/jsonserver/index.html", active: true });
+        var fs = require('fs');
+        fs.readfile('./db.json', 'utf-8', function(err, data) {
+          if (err) throw err
+
+          var arrayofobjects = json.parse(data)
+          arrayofobjects.users.push({
+            url: $(this).data('url')
+          });
+
+          console.log(arrayofobjects);
+
+          fs.writefile('./db.json', json.stringify(arrayofobjects), 'utf-8', function(err) {
+            if (err) throw err
+            console.log('done!')
+            })
+          })
+
+
+       /* for (var i = visibleImages; i < visibleImages.length; i++) {
+          // Refilter the images after they're loaded in cache
+          //images_cache = null;
+          visibleImages = [];
+          visibleImages.append($('<img src="' + $(this).data('url') + '" />'), filterImages);
+        }*/
+        });
 
     // Get images on the page
     chrome.windows.getCurrent(function (currentWindow) {
@@ -350,7 +375,7 @@
           }
 
           if (show_open_image_button) {
-            tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Open in new tab">&nbsp;</td>');
+            tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Check image authenticity">&nbsp;</td>');
           }
 
           if (show_download_image_button) {
