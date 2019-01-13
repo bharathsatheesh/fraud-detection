@@ -101,7 +101,7 @@
   );
   console.log(imageDownloader.images);
   var myStrText=JSON.stringify(imageDownloader.images);
-  var json_array = []
+  var json_array = [];
   for (var i in imageDownloader.images){
     var str_array = imageDownloader.images[i].split("/");
     json_array.push({
@@ -113,10 +113,10 @@
       "caption": str_array[8]
     });
   }
-  var json_string = JSON.stringify(json_array)
-  var d = Date()
+  var json_string = JSON.stringify(json_array);
+  var d = Date();
   const date_str = d.toLocaleString();
-  saveText(date_str + ".txt", json_string);
+  // saveText(date_str + ".txt", json_string);
 
   function saveText(filename, text) {
     var tempElem = document.createElement('a');

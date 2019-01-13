@@ -339,26 +339,26 @@
     images_table.append(dummy_row);
 
     for (var rowIndex = 0; rowIndex < rows; rowIndex++) {
-      if (show_image_url || show_open_image_button || show_download_image_button) {
-        var tools_row = $('<tr></tr>');
-        for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
-          var index = rowIndex * columns + columnIndex;
-          if (index === visibleImages.length) break;
-
-          if (show_image_url) {
-            tools_row.append('<td><input type="text" class="image_url_textbox" value="' + visibleImages[index] + '" readonly /></td>');
-          }
-
-          if (show_open_image_button) {
-            tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Open in new tab">&nbsp;</td>');
-          }
-
-          if (show_download_image_button) {
-            tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Download">&nbsp;</td>');
-          }
-        }
-        images_table.append(tools_row);
-      }
+      // if (show_image_url || show_open_image_button || show_download_image_button) {
+      //   var tools_row = $('<tr></tr>');
+      //   for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
+      //     var index = rowIndex * columns + columnIndex;
+      //     if (index === visibleImages.length) break;
+      //
+      //     if (show_image_url) {
+      //       tools_row.append('<td><input type="text" class="image_url_textbox" value="' + visibleImages[index] + '" readonly /></td>');
+      //     }
+      //
+      //     if (show_open_image_button) {
+      //       tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Open in new tab">&nbsp;</td>');
+      //     }
+      //
+      //     if (show_download_image_button) {
+      //       tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Download">&nbsp;</td>');
+      //     }
+      //   }
+      //   images_table.append(tools_row);
+      // }
 
       // Images row
       var images_row = $('<tr></tr>');
@@ -389,9 +389,17 @@
       }
       ls.image_count = checkedImages.length;
       ls.image_number = 1;
-      checkedImages.forEach(function(checkedImage) {
-        chrome.downloads.download({ url: checkedImage });
-      });
+      var json_string = JSON.stringify(checkedImages);
+      var d = Date();
+      const date_str = d.toLocaleString();
+      saveText(date_str + ".txt", json_string);
+
+      function saveText(filename, text) {
+        var tempElem = document.createElement('a');
+        tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        tempElem.setAttribute('download', filename);
+        tempElem.click();
+      }
 
       flashDownloadingNotification(ls.image_count);
     }
