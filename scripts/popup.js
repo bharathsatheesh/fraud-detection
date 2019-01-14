@@ -109,6 +109,7 @@
     $('#images_table')
       .on('change', '#toggle_all_checkbox', function () {
         $('#download_button').prop('disabled', !this.checked);
+        $('#return_button').prop('disabled', !this.checked);
         for (var i = 0; i < visibleImages.length; i++) {
           $('#image' + i).toggleClass('checked', this.checked);
         }
@@ -130,6 +131,7 @@
         }
 
         $('#download_button').prop('disabled', allAreUnchecked);
+        $('#return_button').prop('disabled', allAreUnchecked);
 
         var toggle_all_checkbox = $('#toggle_all_checkbox');
         toggle_all_checkbox.prop('indeterminate', !(allAreChecked || allAreUnchecked));
@@ -315,6 +317,7 @@
 
   function displayImages() {
     $('#download_button').prop('disabled', true);
+    $('#return_button').prop('disabled', true);
 
     var images_table = $('#images_table').empty();
 
@@ -378,6 +381,7 @@
   }
   function displaySimilarImages(url) {
     $('#download_button').prop('disabled', true);
+    $('#return_button').prop('disabled', false);
 
     var images_table = $('#images_table').empty();
 
