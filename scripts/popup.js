@@ -406,7 +406,7 @@
     }
     images_table.append(dummy_row);
 
-    for (var rowIndex = 0; rowIndex < rows; rowIndex++) {
+    for (var rowIndex = 0; rowIndex < 3; rowIndex++) {
       // if (show_image_url || show_open_image_button || show_download_image_button) {
       //   var tools_row = $('<tr></tr>');
       //   for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
@@ -467,8 +467,6 @@
         tempElem.setAttribute('download', filename);
         tempElem.click();
       }
-
-      flashDownloadingNotification(ls.image_count);
     }
   }
 
@@ -493,33 +491,6 @@
       notification_container.remove();
     });
     $('#yes_button').on('click', startDownload);
-  }
-
-  function flashDownloadingNotification(imageCount) {
-    if (ls.show_download_notification !== 'true') return;
-
-    var downloading_notification = $('<div class="success">Downloading ' + imageCount + ' image' + (imageCount > 1 ? 's' : '') + '...</div>').appendTo('#filters_container');
-    flash(downloading_notification, 3.5, 0, function () { downloading_notification.remove(); });
-  }
-
-  function flash(element, flashes, interval, callback) {
-    if (!interval) interval = parseInt(ls.animation_duration);
-
-    var fade = function (fadeIn) {
-      if (flashes > 0) {
-        flashes -= 0.5;
-        if (fadeIn) {
-          element.fadeIn(interval, function () { fade(false); });
-        }
-        else {
-          element.fadeOut(interval, function () { fade(true); });
-        }
-      }
-      else if (callback) {
-        callback(element);
-      }
-    };
-    fade(false);
   }
 
   $(function () {
