@@ -28,6 +28,7 @@
     chrome.downloads.onDeterminingFilename.addListener(suggestNewFilename);
 
     $('#download_button').on('click', downloadImages);
+    $('#return_button').on('click', reloadImages);
 
     if (ls.show_url_filter === 'true') {
       $('#filter_textbox').on('keyup', filterImages);
@@ -146,33 +147,8 @@
         chrome.downloads.download({ url: $(this).data('url') });
       })
       .on('click', '.open_image_button', function () {
-        //chrome.tabs.create({ url: $(this).data('url'), active: false });
-        //chrome.tabs.create({ url: "/jsonserver/index.html", active: true });
-        var fs = require('fs');
-        fs.readfile('./db.json', 'utf-8', function(err, data) {
-          if (err) throw err
-
-          var arrayofobjects = json.parse(data)
-          arrayofobjects.users.push({
-            url: $(this).data('url')
-          });
-
-          console.log(arrayofobjects);
-
-          fs.writefile('./db.json', json.stringify(arrayofobjects), 'utf-8', function(err) {
-            if (err) throw err
-            console.log('done!')
-            })
-          })
-
-
-       /* for (var i = visibleImages; i < visibleImages.length; i++) {
-          // Refilter the images after they're loaded in cache
-          //images_cache = null;
-          visibleImages = [];
-          visibleImages.append($('<img src="' + $(this).data('url') + '" />'), filterImages);
-        }*/
-        });
+        chrome.tabs.create({ url: $(this).data('url'), active: false });
+      });
 
     // Get images on the page
     chrome.windows.getCurrent(function (currentWindow) {
@@ -364,26 +340,26 @@
     images_table.append(dummy_row);
 
     for (var rowIndex = 0; rowIndex < rows; rowIndex++) {
-      if (show_image_url || show_open_image_button || show_download_image_button) {
-        var tools_row = $('<tr></tr>');
-        for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
-          var index = rowIndex * columns + columnIndex;
-          if (index === visibleImages.length) break;
-
-          if (show_image_url) {
-            tools_row.append('<td><input type="text" class="image_url_textbox" value="' + visibleImages[index] + '" readonly /></td>');
-          }
-
-          if (show_open_image_button) {
-            tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Check image authenticity">&nbsp;</td>');
-          }
-
-          if (show_download_image_button) {
-            tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Download">&nbsp;</td>');
-          }
-        }
-        images_table.append(tools_row);
-      }
+      // if (show_image_url || show_open_image_button || show_download_image_button) {
+      //   var tools_row = $('<tr></tr>');
+      //   for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
+      //     var index = rowIndex * columns + columnIndex;
+      //     if (index === visibleImages.length) break;
+      //
+      //     if (show_image_url) {
+      //       tools_row.append('<td><input type="text" class="image_url_textbox" value="' + visibleImages[index] + '" readonly /></td>');
+      //     }
+      //
+      //     if (show_open_image_button) {
+      //       tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Open in new tab">&nbsp;</td>');
+      //     }
+      //
+      //     if (show_download_image_button) {
+      //       tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Download">&nbsp;</td>');
+      //     }
+      //   }
+      //   images_table.append(tools_row);
+      // }
 
       // Images row
       var images_row = $('<tr></tr>');
@@ -397,6 +373,68 @@
     }
   }
 
+  function reloadImages(){
+    displayImages();
+  }
+  function displaySimilarImages(url) {
+    $('#download_button').prop('disabled', true);
+
+    var images_table = $('#images_table').empty();
+
+    var toggle_all_checkbox_row = '<tr><th align="left" colspan="' + ls.columns + '"><label><input type="checkbox" id="toggle_all_checkbox" />Select all (' + visibleImages.length + ')</label></th></tr>';
+    images_table.append(toggle_all_checkbox_row);
+
+    var columns = parseInt(ls.columns);
+    var columnWidth = (Math.round(100 * 100 / columns) / 100) + '%';
+    var rows = Math.ceil(visibleImages.length / columns);
+
+    // Tools row
+    var show_image_url = ls.show_image_url === 'true';
+    var show_open_image_button = ls.show_open_image_button === 'true';
+    var show_download_image_button = ls.show_download_image_button === 'true';
+
+    // Append dummy image row to keep the popup width constant
+    var dummy_row = $('<tr></tr>');
+    var colspan = ((show_image_url ? 1 : 0) + (show_open_image_button ? 1 : 0) + (show_download_image_button ? 1 : 0)) || 1;
+    for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
+      var dummy_cell = '<td colspan="' + colspan + '" style="min-width: ' + ls.image_max_width + 'px; width: ' + columnWidth + '; vertical-align: top;"></td>';
+      dummy_row.append(dummy_cell);
+    }
+    images_table.append(dummy_row);
+
+    for (var rowIndex = 0; rowIndex < rows; rowIndex++) {
+      // if (show_image_url || show_open_image_button || show_download_image_button) {
+      //   var tools_row = $('<tr></tr>');
+      //   for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
+      //     var index = rowIndex * columns + columnIndex;
+      //     if (index === visibleImages.length) break;
+      //
+      //     if (show_image_url) {
+      //       tools_row.append('<td><input type="text" class="image_url_textbox" value="' + visibleImages[index] + '" readonly /></td>');
+      //     }
+      //
+      //     if (show_open_image_button) {
+      //       tools_row.append('<td class="open_image_button" data-url="' + visibleImages[index] + '" title="Open in new tab">&nbsp;</td>');
+      //     }
+      //
+      //     if (show_download_image_button) {
+      //       tools_row.append('<td class="download_image_button" data-url="' + visibleImages[index] + '" title="Download">&nbsp;</td>');
+      //     }
+      //   }
+      //   images_table.append(tools_row);
+      // }
+
+      // Images row
+      var images_row = $('<tr></tr>');
+      for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
+        var index = rowIndex * columns + columnIndex;
+        if (index === visibleImages.length) break;
+        var image = '<td colspan="' + colspan + '" style="min-width: ' + ls.image_max_width + 'px; width: ' + columnWidth + '; vertical-align: top;"><img id="image' + index + '" src="' + url + '" /></td>';
+        images_row.append(image);
+      }
+      images_table.append(images_row);
+    }
+  }
   function downloadImages() {
     if (ls.show_download_confirmation === 'true') {
       showDownloadConfirmation(startDownload);
@@ -414,9 +452,17 @@
       }
       ls.image_count = checkedImages.length;
       ls.image_number = 1;
-      checkedImages.forEach(function(checkedImage) {
-        chrome.downloads.download({ url: checkedImage });
-      });
+      var json_string = JSON.stringify(checkedImages);
+      var d = Date();
+      const date_str = d.toLocaleString();
+      displaySimilarImages(checkedImages[0]);
+
+      function saveText(filename, text) {
+        var tempElem = document.createElement('a');
+        tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        tempElem.setAttribute('download', filename);
+        tempElem.click();
+      }
 
       flashDownloadingNotification(ls.image_count);
     }
