@@ -321,9 +321,6 @@
 
     var images_table = $('#images_table').empty();
 
-    var toggle_all_checkbox_row = '<tr><th align="left" colspan="' + ls.columns + '"><label><input type="checkbox" id="toggle_all_checkbox" />Select all (' + visibleImages.length + ')</label></th></tr>';
-    images_table.append(toggle_all_checkbox_row);
-
     var columns = parseInt(ls.columns);
     var columnWidth = (Math.round(100 * 100 / columns) / 100) + '%';
     var rows = Math.ceil(visibleImages.length / columns);
@@ -383,14 +380,45 @@
     $('#download_button').prop('disabled', true);
     $('#return_button').prop('disabled', false);
 
-    var images_table = $('#images_table').empty();
+    var xhr = new XMLHttpRequest();
 
-    var toggle_all_checkbox_row = '<tr><th align="left" colspan="' + ls.columns + '"><label><input type="checkbox" id="toggle_all_checkbox" />Select all (' + visibleImages.length + ')</label></th></tr>';
-    images_table.append(toggle_all_checkbox_row);
+    xhr.open('POST',"http://localhost:5000/search");
+
+//Important
+    xhr.setRequestHeader("Content-Type","application/json");
+
+    var data= {
+      image_url:url,
+      resized_images:true
+    };
+
+    var json = JSON.stringify(data);
+
+    xhr.onreadystatechange = gotDetails;
+
+    xhr.send(json);
+
+    var gotDetails = () => {
+      //Got The response
+      console.log(xhr.responseText);
+    };
+    var d = Date();
+    const date_str = d.toLocaleString();
+    // saveText(date_str + ".txt", gotDetails);
+    //
+    // function saveText(filename, text) {
+    //   var tempElem = document.createElement('a');
+    //   tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    //   tempElem.setAttribute('download', filename);
+    //   tempElem.click();
+    // }
+
+    var vis_images = visibleImages
+    var images_table = $('#images_table').empty();
 
     var columns = parseInt(ls.columns);
     var columnWidth = (Math.round(100 * 100 / columns) / 100) + '%';
-    var rows = Math.ceil(visibleImages.length / columns);
+    var rows = Math.ceil(vis_images.length / columns);
 
     // Tools row
     var show_image_url = ls.show_image_url === 'true';
@@ -406,7 +434,7 @@
     }
     images_table.append(dummy_row);
 
-    for (var rowIndex = 0; rowIndex < 3; rowIndex++) {
+    for (var rowIndex = 0; rowIndex < rows; rowIndex++) {
       // if (show_image_url || show_open_image_button || show_download_image_button) {
       //   var tools_row = $('<tr></tr>');
       //   for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
