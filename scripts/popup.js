@@ -109,6 +109,7 @@
     $('#images_table')
       .on('change', '#toggle_all_checkbox', function () {
         $('#download_button').prop('disabled', !this.checked);
+        $('#return_button').prop('disabled', !this.checked);
         for (var i = 0; i < visibleImages.length; i++) {
           $('#image' + i).toggleClass('checked', this.checked);
         }
@@ -130,6 +131,7 @@
         }
 
         $('#download_button').prop('disabled', allAreUnchecked);
+        $('#return_button').prop('disabled', allAreUnchecked);
 
         var toggle_all_checkbox = $('#toggle_all_checkbox');
         toggle_all_checkbox.prop('indeterminate', !(allAreChecked || allAreUnchecked));
@@ -315,11 +317,9 @@
 
   function displayImages() {
     $('#download_button').prop('disabled', true);
+    $('#return_button').prop('disabled', true);
 
     var images_table = $('#images_table').empty();
-
-    var toggle_all_checkbox_row = '<tr><th align="left" colspan="' + ls.columns + '"><label><input type="checkbox" id="toggle_all_checkbox" />Select all (' + visibleImages.length + ')</label></th></tr>';
-    images_table.append(toggle_all_checkbox_row);
 
     var columns = parseInt(ls.columns);
     var columnWidth = (Math.round(100 * 100 / columns) / 100) + '%';
@@ -378,15 +378,47 @@
   }
   function displaySimilarImages(url) {
     $('#download_button').prop('disabled', true);
+    $('#return_button').prop('disabled', false);
 
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST',"http://localhost:5000/search");
+
+//Important
+    xhr.setRequestHeader("Content-Type","application/json");
+
+    var data= {
+      image_url:url,
+      resized_images:true
+    };
+
+    var json = JSON.stringify(data);
+
+    xhr.onreadystatechange = gotDetails;
+
+    xhr.send(json);
+
+    var gotDetails = () => {
+      //Got The response
+      console.log(xhr.responseText);
+    };
+    var d = Date();
+    const date_str = d.toLocaleString();
+    // saveText(date_str + ".txt", gotDetails);
+    //
+    // function saveText(filename, text) {
+    //   var tempElem = document.createElement('a');
+    //   tempElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    //   tempElem.setAttribute('download', filename);
+    //   tempElem.click();
+    // }
+
+    var vis_images = visibleImages
     var images_table = $('#images_table').empty();
-
-    var toggle_all_checkbox_row = '<tr><th align="left" colspan="' + ls.columns + '"><label><input type="checkbox" id="toggle_all_checkbox" />Select all (' + visibleImages.length + ')</label></th></tr>';
-    images_table.append(toggle_all_checkbox_row);
 
     var columns = parseInt(ls.columns);
     var columnWidth = (Math.round(100 * 100 / columns) / 100) + '%';
-    var rows = Math.ceil(visibleImages.length / columns);
+    var rows = Math.ceil(vis_images.length / columns);
 
     // Tools row
     var show_image_url = ls.show_image_url === 'true';
@@ -442,38 +474,6 @@
     else {
       startDownload();
     }
-    function apiCall(){
-    var request = new XMLHttpRequest();
-    //request.open('GET', 'https://localhost:8080/results/' + url, true);
-    request.open('GET', 'https://localhost:8080', true);
-        var data = JSON.stringify(results);
-        if (request.status >= 200 && request.status < 400) {
-            data.forEach(data => {
-                console.log(data.img_url);
-            });
-        } else {
-            console.log('error');
-        }
-      request.send();
-    }
-    /*-- From: https://github.com/vivithemage/mrisa.git --*/
-    function reverseImageSearch(url) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST',"http://localhost:5000/search");
-      //Important
-      xhr.setRequestHeader("Content-Type","application/json");
-      data= {
-        "image_url": url,
-        "resized_images":false // Or true
-      };
-      json = JSON.stringify(data);
-      xhr.onreadystatechange = gotDetails;
-      xhr.send(json);
-      var gotDetails = () => {
-        //Got The response
-        console.log(xhr.responseText);
-      };
-    }
 
     function startDownload() {
       var checkedImages = [];
@@ -488,8 +488,6 @@
       var d = Date();
       const date_str = d.toLocaleString();
       displaySimilarImages(checkedImages[0]);
-      apiCall();
-      reverseImageSearch(checkedImages[0]);
 
       function saveText(filename, text) {
         var tempElem = document.createElement('a');
@@ -497,8 +495,6 @@
         tempElem.setAttribute('download', filename);
         tempElem.click();
       }
-
-      flashDownloadingNotification(ls.image_count);
     }
   }
 
@@ -523,33 +519,6 @@
       notification_container.remove();
     });
     $('#yes_button').on('click', startDownload);
-  }
-
-  function flashDownloadingNotification(imageCount) {
-    if (ls.show_download_notification !== 'true') return;
-
-    var downloading_notification = $('<div class="success">Searching for ' + imageCount + ' image' + (imageCount > 1 ? 's' : '') + '...</div>').appendTo('#filters_container');
-    flash(downloading_notification, 3.5, 0, function () { downloading_notification.remove(); });
-  }
-
-  function flash(element, flashes, interval, callback) {
-    if (!interval) interval = parseInt(ls.animation_duration);
-
-    var fade = function (fadeIn) {
-      if (flashes > 0) {
-        flashes -= 0.5;
-        if (fadeIn) {
-          element.fadeIn(interval, function () { fade(false); });
-        }
-        else {
-          element.fadeOut(interval, function () { fade(true); });
-        }
-      }
-      else if (callback) {
-        callback(element);
-      }
-    };
-    fade(false);
   }
 
   $(function () {

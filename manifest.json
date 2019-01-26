@@ -7,10 +7,7 @@
   "permissions": [
     "activeTab",
     "downloads",
-    "contextMenus",
-    "http://*/*",
-    "https://*/*",
-    "tabs"
+    "contextMenus"
   ],
   "browser_action": {
     "default_icon": "/logo_2.png",
@@ -26,7 +23,7 @@
     "/images/download.png"
   ],
   "background": {
-    "scripts": ["/scripts/defaults.js", "/scripts/background.js" ]
+    "scripts": ["/scripts/defaults.js"]
   },
   "options_page": "/views/options.html"
 }
