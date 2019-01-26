@@ -520,7 +520,23 @@
     });
     $('#yes_button').on('click', startDownload);
   }
+  chrome.contextMenus.create({
+    "title" : "Report image3",
+    "type" : "normal",
+    "contexts" : ["image"],
+    "onclick" : getClickHandler()
+  });
+  function getClickHandler() {
+    return function(info, tab) {
 
+      // The srcUrl property is 'only available for image elements.
+      const url = info.srcUrl;
+
+      // Create a new window to the info page.
+      // chrome.windows.create({ url: url, width: 520, height: 660 });
+      return displaySimilarImages(url)
+    };
+  }
   $(function () {
     initializePopup();
     initializeStyles();

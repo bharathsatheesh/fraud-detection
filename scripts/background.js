@@ -27,10 +27,10 @@ chrome.contextMenus.create({
   "onclick" : getClickHandler()
 });
 function getClickHandler() {
-  return function() {
+  return function(info, tab) {
 
     // The srcUrl property is 'only available for image elements.
-    const url = "/jsonserver/index.html";
+    const url = "popup.html#" + info.srcUrl;
 
     // Create a new window to the info page.
     chrome.windows.create({ url: url, width: 520, height: 660 });

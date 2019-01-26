@@ -23,7 +23,7 @@
     "/images/download.png"
   ],
   "background": {
-    "scripts": ["/scripts/defaults.js", "/scripts/background.js"]
+    "scripts": ["/scripts/defaults.js", "/scripts/popup.js"]
   },
   "options_page": "/views/options.html"
 }
