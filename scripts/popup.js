@@ -442,6 +442,38 @@
     else {
       startDownload();
     }
+    function apiCall(){
+    var request = new XMLHttpRequest();
+    //request.open('GET', 'https://localhost:8080/results/' + url, true);
+    request.open('GET', 'https://localhost:8080', true);
+        var data = JSON.stringify(results);
+        if (request.status >= 200 && request.status < 400) {
+            data.forEach(data => {
+                console.log(data.img_url);
+            });
+        } else {
+            console.log('error');
+        }
+      request.send();
+    }
+    /*-- From: https://github.com/vivithemage/mrisa.git --*/
+    function reverseImageSearch(url) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST',"http://localhost:5000/search");
+      //Important
+      xhr.setRequestHeader("Content-Type","application/json");
+      data= {
+        "image_url": url,
+        "resized_images":false // Or true
+      };
+      json = JSON.stringify(data);
+      xhr.onreadystatechange = gotDetails;
+      xhr.send(json);
+      var gotDetails = () => {
+        //Got The response
+        console.log(xhr.responseText);
+      };
+    }
 
     function startDownload() {
       var checkedImages = [];
@@ -456,6 +488,8 @@
       var d = Date();
       const date_str = d.toLocaleString();
       displaySimilarImages(checkedImages[0]);
+      apiCall();
+      reverseImageSearch(checkedImages[0]);
 
       function saveText(filename, text) {
         var tempElem = document.createElement('a');
@@ -494,7 +528,7 @@
   function flashDownloadingNotification(imageCount) {
     if (ls.show_download_notification !== 'true') return;
 
-    var downloading_notification = $('<div class="success">Downloading ' + imageCount + ' image' + (imageCount > 1 ? 's' : '') + '...</div>').appendTo('#filters_container');
+    var downloading_notification = $('<div class="success">Searching for ' + imageCount + ' image' + (imageCount > 1 ? 's' : '') + '...</div>').appendTo('#filters_container');
     flash(downloading_notification, 3.5, 0, function () { downloading_notification.remove(); });
   }
 

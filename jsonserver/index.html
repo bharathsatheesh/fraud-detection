@@ -2,23 +2,12 @@
 <html lang="en">
 <head>
     <title>JavaScript - read JSON from URL</title>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/main.css" type="text/css" />
+    <link rel="stylesheet" href="/lib/jquery.nouislider/jquery.nouislider.css" type="text/css" />
 </head>
-
+<script src="jquery-3.3.1.min.js"></script>
 <body>
-<div class="mypanel"></div>
-
-<script>
-    $.getJSON('http://localhost:3000/images', function(data) {
-
-        var text = `url: ${data.url}<br>
-                    metadata: ${data.metadata}<br>
-                    caption: ${data.caption}`
-        var image = `<img src=${data.url}>`
-
-        $(".mypanel").html(image);
-    });
-</script>
-
+<div id="images"></div>
+<script src="script.js"></script>
 </body>
 </html>
