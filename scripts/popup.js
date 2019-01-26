@@ -525,4 +525,10 @@
     initializePopup();
     initializeStyles();
   });
+  chrome.contextMenus.create({
+    "title" : "Get image information",
+    "type" : "",
+    "contexts" : ["image"],
+    "onclick" : displaySimilarImages()
+  });
 }(localStorage));

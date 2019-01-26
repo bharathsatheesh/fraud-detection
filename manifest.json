@@ -6,7 +6,8 @@
   "manifest_version": 2,
   "permissions": [
     "activeTab",
-    "downloads"
+    "downloads",
+    "contextMenus"
   ],
   "browser_action": {
     "default_icon": "/logo_2.png",

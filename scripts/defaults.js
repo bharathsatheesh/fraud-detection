@@ -55,6 +55,16 @@
     if (ls[option] === undefined) ls[option] = defaults[option];
     ls[option + '_default'] = defaults[option];
   }
-
   ls.options = JSON.stringify(Object.keys(defaults));
+
+  var searchUrbanDict = function(word){
+    var query = word.selectionText;
+    chrome.tabs.create({url: "http://www.urbandictionary.com/define.php?term=" + query});
+  };
+
+  chrome.contextMenus.create({
+    title: "Search in UrbanDictionary",
+    contexts:["selection"],  // ContextType
+    onclick: searchUrbanDict // A callback function
+  });
 }(localStorage));
